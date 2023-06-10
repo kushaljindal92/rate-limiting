@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="magentomaster" translate="label" sortOrder="10">
+            <label>Magentomaster</label>
+        </tab>
+        <section id="rate_limiting" translate="label" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Rate Limiting Settings</label>
+            <tab>magentomaster</tab>
+            <resource>Magentomaster_RateLimiting::config_rate_limiting</resource>
+            <group id="general" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General Configuration</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Rate Limiting</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="requests_per_minute" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Requests per Minute</label>
+                    <validate>validate-digits</validate>
+                    <comment>Set the maximum number of requests allowed per minute.</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
