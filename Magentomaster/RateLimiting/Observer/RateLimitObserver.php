@@ -39,9 +39,24 @@ class RateLimitObserver implements ObserverInterface
     {
         $isEnabled = $this->scopeConfig->getValue('rate_limiting/general/enabled');
         $requestsPerMinute = (int) $this->scopeConfig->getValue('rate_limiting/general/requests_per_minute');
+        $ipAddress = $this->remoteAddress->getRemoteAddress();
         
         if ($isEnabled && $requestsPerMinute > 0) {
-            $ipAddress = $this->remoteAddress->getRemoteAddress();
+             //check if searched url is correct
+            $query = $this->request->getParam('q');
+            $pattern = '/^[A-Za-z0-9!@#$%^&*()\-_=+{};:,.<>?[\]\'"\/\\|~` ]+$/';
+            if(!empty($query)){
+                if (!preg_match($pattern, $query))
+                {
+                    $this->logger->info('Search is from other language from IP: ' . $ipAddress);
+                    $this->response->setHttpResponseCode(429); // Too Many Requests
+                    $this->response->setBody('Stop Spamming');
+                    $this->response->sendResponse();
+                    exit();
+                }
+            }
+            //end here
+            
             $cacheKey = 'rate_limiting_' . md5($ipAddress);
 
             $cache = \Magento\Framework\App\ObjectManager::getInstance()->get(\Magento\Framework\App\CacheInterface::class);
